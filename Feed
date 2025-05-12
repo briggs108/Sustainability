@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ted's Sustainability News</title>
+    <style>
+        /* Minimalist Black & White Styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 20px;
+            background-color: #f8f8f8; /* Very light gray background */
+            color: #333; /* Dark gray text */
+        }
+
+        .container {
+            max-width: 1000px; /* Slightly narrower for a cleaner look */
+            margin: auto;
+            background-color: white; /* White container background */
+            padding: 30px;
+            border-radius: 0; /* Remove rounded corners */
+            box-shadow: none; /* Remove shadow */
+            border: 1px solid #eee; /* Add a subtle border */
+        }
+
+        h1 {
+            text-align: center;
+            color: #111; /* Darker heading */
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 500; /* Slightly lighter weight */
+        }
+
+        .controls {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center; /* Align items vertically */
+        }
+
+        .controls button {
+            padding: 8px 15px;
+            border: 1px solid #ccc; /* Light gray border */
+            border-radius: 4px; /* Slightly rounded corners */
+            background-color: white; /* White background */
+            color: #333; /* Dark gray text */
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            font-size: 1em;
+        }
+
+        .controls button:hover {
+            background-color: #f5f5f5; /* Lighter gray on hover */
+            border-color: #bbb;
+        }
+
+        .controls button.active {
+            background-color: #333; /* Dark gray background for active */
+            color: white; /* White text */
+            border-color: #333;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .date-filter {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .date-filter input[type="date"] {
+            padding: 8px;
+            border: 1px solid #ccc; /* Light gray border */
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .search-filter input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc; /* Light gray border */
+            border-radius: 4px;
+            min-width: 200px;
+            font-size: 1em;
+        }
+
+        .story-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .story-table th, .story-table td {
+            border: 1px solid #eee; /* Very light gray border */
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 1em;
+        }
+
+        .story-table th {
+            background-color: #f9f9f9; /* Very light gray header background */
+            font-weight: bold;
+            color: #222; /* Darker header text */
+        }
+
+        .story-table tr:nth-child(even) {
+            background-color: white; /* White background for even rows */
+        }
+
+        .story-table tr:hover {
+            background-color: #f0f0f0; /* Slightly lighter gray on hover */
+        }
+
+        .story-table img {
+            max-width: 60px;
+            max-height: 60px;
+            object-fit: cover;
+            border-radius: 3px; /* Slightly rounded corners */
+            display: block;
+            margin: 0 auto;
+            cursor: pointer; /* Indicate that image is clickable */
+        }
+
+        .story-title a {
+            text-decoration: none;
+            color: #111; /* Darker link color */
+            font-weight: 500; /* Slightly lighter weight */
+        }
+
+        .story-title a:hover {
+            text-decoration: underline;
+            color: #000; /* Black link color on hover */
+        }
+
+        .story-tags {
+            font-size: 0.85em;
+            color: #666;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .story-tags span {
+            background-color: #f0f0f0; /* Light gray background for tags */
+            padding: 2px 6px;
+            border-radius: 12px; /* Pill-shaped tags */
+            font-size: 0.8em;
+            color: #444;
+        }
+
+        .story-date {
+            font-size: 0.85em;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .story-description {
+            font-size: 0.9em;
+            color: #444;
+            max-height: 100px; /* Limit initial height */
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+            position: relative;
+        }
+
+        .story-description.expanded {
+            max-height: 500px; /* Allow more height when expanded */
+        }
+
+        .story-description::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+            pointer-events: none;
+        }
+
+        .story-description.expanded::after {
+            background: none; /* Remove gradient when expanded */
+        }
+
+        .read-more {
+            color: #333; /* Dark gray read more text */
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .read-more:hover {
+            text-decoration: underline;
+            color: #000; /* Black read more text on hover */
+        }
+
+        #load-more-container {
+            text-align: center;
+            margin-top: 30px;}
+
+        #load-more-btn {
+            display: none;
+            padding: 10px 20px;
+            border: 1px solid #ccc; /* Light gray border */
+            border-radius: 4px;
+            background-color: #f5f5f5; /* Lighter gray background */
+            color: #333; /* Dark gray text */
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            font-size: 1em;
+        }
+
+        #load-more-btn:hover {
+            background-color: #eee; /* Even lighter gray on hover */
+            border-color: #bbb;
+        }
+
+        /* Modal Styles */
+        .image-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+            justify-content: center;
+            align-items: center;
+            cursor: pointer; /* Indicate clickable to close */
+        }
+
+        .image-modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            display: block;
+            margin: auto;
+            border: 3px solid white;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Simple News Feed</h1>
+
+        <div class="controls">
+            <div class="filter-group">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="tech">Innovation</button>                <button class="filter-btn" data-filter="finance">Longevity</button>
+                <button class="filter-btn" data-filter="politics">Energy</button>
+                <button class="filter-btn" data-filter="health">Startups</button>
+            </div>
+            <div class="date-filter">
+                <label for="startDateFilter">Start:</label>
+                <input type="date" id="startDateFilter">
+                <label for="endDateFilter">End:</label>
+                <input type="date" id="endDateFilter">
+            </div>
+            <div class="search-filter">
+                <label for="keywordSearch">Search:</label>
+                <input type="text" id="keywordSearch" placeholder="Search headline or description...">
+            </div>
+        </div>
+
+        <table class="story-table" id="storyTable">
+            <thead>
+                <tr>
+                    <th>Thumbnail</th>
+                    <th>Headline</th>
+                    <th>Description</th>
+                    <th>Tags</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Story rows will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+
+        <div id="load-more-container">
+            <button id="load-more-btn">Load More Stories</button>
+        </div>
+    </div>
+
+    <!-- The Image Modal -->
+    <div id="imageModal" class="image-modal">
+        <img class="image-modal-content" id="modal-image">
+    </div>
+
+    <script>
+        // REPLACE THIS WITH YOUR PUBLISHED GOOGLE SHEET URL
+        const googleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/141V4ob_FAmepdMAT8vjbPpt4jJsmv1g_GR0SNP1BpXg/pub?gid=YOUR_GID_ID&single=true&output=csv';
+
+        const tableBody = document.getElementById('storyTable').querySelector('tbody');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const startDateFilter = document.getElementById('startDateFilter');
+        const endDateFilter = document.getElementById('endDateFilter');
+        const keywordSearch = document.getElementById('keywordSearch');
+        const loadMoreBtn = document.getElementById('load-more-btn');
+        const imageModal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modal-image');
+
+        const storiesPerPage = 10; // How many stories to show initially and per load
+        let allStories = []; // To store all stories from the sheet
+        let currentDisplayedStories = 0;
+        let filteredStories = [];
+
+        // Function to fetch data from Google Sheet
+        async function fetchStories() {
+            try {
+                const response = await fetch(googleSheetUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const csvText = await response.text();
+                const lines = csvText.split('\n');
+                const headers = lines[0].split(',');
+
+                allStories = lines.slice(1).map(line => {
+                    const values = line.split(',');
+                    const story = {};
+                    headers.forEach((header, index) => {
+                        header = header.trim();
+                        let value = (values[index] || '').trim();
+                        if (header === 'tags') {
+                            story[header] = value.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+                        } else if (header === 'published') {
+                            story[header] = value.toLowerCase() === 'TRUE';
+                        } else {
+                            story[header] = value;
+                        }
+                    });
+                    return story;
+                });
+
+                // Filter for published stories initially
+                allStories = allStories.filter(story => story.published);
+
+                // Sort stories by date (most recent first)
+                allStories.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                // Initialize filteredStories with all published stories
+                filteredStories = [...allStories];
+
+                // Render the first batch
+                renderStories(filteredStories, 0);
+
+            } catch (error) {
+                console.error("Error fetching or processing stories:", error);
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Error loading stories. Please try again later.</td></tr>';
+                loadMoreBtn.style.display = 'none'; // Hide load more on error
+            }
+        }
+
+        // Function to render stories in the table
+        function renderStories(storiesToShow, startIndex = 0) {
+            const endIndex = Math.min(startIndex + storiesPerPage, storiesToShow.length);
+            const storiesToRender = storiesToShow.slice(startIndex, endIndex);
+
+            if (storiesToRender.length === 0 && startIndex === 0) {
+                 tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No stories found.</td></tr>';
+                 loadMoreBtn.style.display = 'none';
+                 return;
+            } else if (storiesToRender.length === 0 && startIndex > 0) {
+                 // No more stories to load
+                 return;
+            }
+
+
+            storiesToRender.forEach(story => {
+                const row = document.createElement('tr');
+
+                // Thumbnail Cell
+                const thumbnailCell = row.insertCell();
+                const img = document.createElement('img');
+                img.src = story.thumbnailUrl;
+                img.alt = story.headline;
+                thumbnailCell.appendChild(img);
+
+                // Add click listener to image
+                img.addEventListener('click', () => {
+                    openImageModal(story.thumbnailUrl);
+                });
+
+                // Headline Cell
+                const headlineCell = row.insertCell();
+                headlineCell.classList.add('story-title');
+                const headlineLink = document.createElement('a');
+                headlineLink.href = story.link;
+                headlineLink.target = "_blank"; // Open link in new tab
+                headlineLink.textContent = story.headline;
+                headlineCell.appendChild(headlineLink);
+
+                // Description Cell
+                const descriptionCell = row.insertCell();
+                descriptionCell.classList.add('story-description');
+                const descriptionText = document.createElement('span');
+                descriptionText.textContent = story.description;
+                descriptionCell.appendChild(descriptionText);
+
+                const readMoreBtn = document.createElement('span');
+                readMoreBtn.classList.add('read-more');
+                readMoreBtn.textContent = 'Read More';
+                readMoreBtn.addEventListener('click', () => {
+                    descriptionCell.classList.toggle('expanded');
+                    readMoreBtn.textContent = descriptionCell.classList.contains('expanded') ? 'Read Less' : 'Read More';
+                });
+                descriptionCell.appendChild(readMoreBtn);
+
+                // Tags Cell
+                const tagsCell = row.insertCell();                tagsCell.classList.add('story-tags');
+                story.tags.forEach(tag => {
+                    const tagSpan = document.createElement('span');
+                    tagSpan.textContent = tag;
+                    tagsCell.appendChild(tagSpan);
+                });
+
+                // Date Cell
+                const dateCell = row.insertCell();
+                dateCell.classList.add('story-date');
+                dateCell.textContent = story.date;
+
+                tableBody.appendChild(row);
+            });
+
+            currentDisplayedStories += storiesToRender.length;
+
+            // Show/Hide Load More button
+            if (currentDisplayedStories < storiesToShow.length) {
+                loadMoreBtn.style.display = 'inline-block';
+            } else {
+                loadMoreBtn.style.display = 'none';
+            }
+        }
+
+        // Function to open the image modal
+        function openImageModal(imageUrl) {
+            modalImage.src = imageUrl;
+            imageModal.style.display = 'flex';
+        }
+
+        // Function to close the image modal
+        function closeImageModal() {
+            imageModal.style.display = 'none';}
+
+        // Function to apply filters
+        function applyFilters() {
+            const activeTagFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+            const startDateValue = startDateFilter.value;
+            const endDateValue = endDateFilter.value;
+            const keywordValue = keywordSearch.value.toLowerCase();
+
+            filteredStories = allStories; // Start with all published stories
+
+            // Apply Tag Filter
+            if (activeTagFilter !== 'all') {
+                filteredStories = filteredStories.filter(story => story.tags.includes(activeTagFilter));
+            }
+
+            // Apply Date Range Filter
+            if (startDateValue || endDateValue) {
+                filteredStories = filteredStories.filter(story => {
+                    const storyDate = new Date(story.date);
+                    const startDate = startDateValue ? new Date(startDateValue) : null;
+                    const endDate = endDateValue ? new Date(endDateValue) : null;
+
+                    let dateInRange = true;
+                    if (startDate && storyDate < startDate) {
+                        dateInRange = false;
+                    }
+                    if (endDate && storyDate > endDate) {
+                        dateInRange = false;
+                    }
+
+                    return dateInRange;
+                });
+            }
+
+            // Apply Keyword Filter
+            if (keywordValue) {
+                filteredStories = filteredStories.filter(story => {
+                    const headlineLower = story.headline.toLowerCase();
+                    const descriptionLower = story.description.toLowerCase();
+                    return headlineLower.includes(keywordValue) || descriptionLower.includes(keywordValue);
+                });
+            }
+
+            tableBody.innerHTML = ''; // Clear existing rows
+            currentDisplayedStories = 0; // Reset displayed count
+            renderStories(filteredStories, 0); // Render the first batch
+        }
+
+        // Fetch stories when the page loads
+        fetchStories();
+
+        // Tag Filtering Logic
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from other tag buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                applyFilters();
+            });
+        });
+
+        // Date Filtering Event Listeners
+        startDateFilter.addEventListener('change', applyFilters);
+        endDateFilter.addEventListener('change', applyFilters);
+
+        // Keyword Search Event Listener
+        keywordSearch.addEventListener('input', applyFilters);
+
+        // Load More Button Event Listener
+        loadMoreBtn.addEventListener('click', () => {
+            renderStories(filteredStories, currentDisplayedStories);
+        });
+
+        // Close modal when clicking outside the image
+        imageModal.addEventListener('click', (event) => {
+            if (event.target === imageModal) {
+                closeImageModal();
+            }
+        });
+
+    </script>
+
+</body>
+</html>
