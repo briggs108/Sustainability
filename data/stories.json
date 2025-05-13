@@ -1,0 +1,29 @@
+[
+  {
+    "thumbnailUrl": "https://example.com/image1.jpg",
+    "link": "https://example.com/story1",
+    "headline": "New Innovation in Sustainability",
+    "description": "This is a detailed description of the first story about an amazing new sustainable technology.",
+    "tags": ["Innovation", "Energy"],
+    "date": "2025-05-12",
+    "published": true
+  },
+  {
+    "thumbnailUrl": "https://example.com/image2.png",
+    "link": "https://example.com/story2",
+    "headline": "Breakthrough in Longevity Research",
+    "description": "A fascinating article on recent discoveries extending human lifespan through sustainable practices.",
+    "tags": ["Longevity", "Health"],
+    "date": "2025-04-28",
+    "published": true
+  },
+  {
+    "thumbnailUrl": "https://example.com/image3.jpeg",
+    "link": "https://example.com/story3",
+    "headline": "Sustainable Startups Taking Off",
+    "description": "Exploring new companies making a significant impact in the green economy with innovative solutions.",
+    "tags": ["Startups"],
+    "date": "2025-04-15",
+    "published": false
+  }
+]
