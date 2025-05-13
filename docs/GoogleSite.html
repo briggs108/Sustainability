@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ai Applications</title>
+    <style>
+        /* Basic Styling for the table */
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #222;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .controls input[type="text"],
+        .controls select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        .controls input[type="text"] {
+            flex-grow: 1; /* Allow search input to take space */
+            min-width: 200px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #555;
+            cursor: pointer; /* Indicate sortable columns */
+        }
+
+        th:hover {
+            background-color: #e0e0e0;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #e8e8e8;
+        }
+
+        .sort-arrow {
+            margin-left: 5px;
+            display: inline-block;
+        }
+        .sort-arrow.asc::after {
+            content: '▲';
+        }
+        .sort-arrow.desc::after {
+            content: '▼';
+        }
+
+        /* Make Tags column thinner */
+        #story-table th:nth-child(2),
+        #story-table td:nth-child(2) {
+            max-width: 120px; /* Adjust max width as needed */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; /* Keep text on a single line */
+        }
+
+        /* Make Title column wider */
+        #story-table th:nth-child(1),
+        #story-table td:nth-child(1) {
+            width: auto; /* Allow title column to take remaining space */
+        }
+
+        /* Keep Date column same width */
+        #story-table th:nth-child(3),
+        #story-table td:nth-child(3) {
+            max-width: 120px; /* Adjust max width as needed */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; /* Keep text on a single line */
+        }
+
+        /* Styling for tag chips */
+        .tag-chip {
+            display: inline-block;
+            padding: 3px 8px;
+            margin: 2px;
+            background-color: #e0e0e0; /* Light gray background */
+            color: #333;             /* Dark gray text */
+            border-radius: 12px; /* Rounded shape */
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Ai Applications</h1>
+
+        <div class="controls">
+            <input type="text" id="search-input" placeholder="Search stories...">
+            <select id="tag-filter">
+                <option value="">All Tags</option>
+                <!-- Options will be populated by JavaScript -->
+            </select>
+        </div>
+
+        <table id="story-table">
+            <thead>
+                <tr>
+                    <th data-sort="title">Title <span class="sort-arrow"></span></th>
+                    <th data-sort="tags">Tags <span class="sort-arrow"></span></th>
+                    <th data-sort="date">Date <span class="sort-arrow"></span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Your Story Data Will Go Here -->
+                <tr>
+                    <td><a href="story1.html">Our New Solar Initiative</a></td>
+                    <td>Energy, Environment</td>
+                    <td>2023-10-26</td>
+                </tr>
+                <tr>
+                    <td><a href="story2.html">Recycling Program Update</a></td>
+                    <td>Waste, Community</td>
+                    <td>2023-09-15</td>
+                </tr>
+                <tr>
+                    <td><a href="story3.html">Sustainable Farming Practices</a></td>
+                    <td>Agriculture, Environment, Food</td>
+                    <td>2023-11-01</td>
+                </tr>
+                <tr>
+                    <td><a href="story4.html">Water Conservation Tips</a></td>
+                    <td>Water, Environment</td>
+                    <td>2023-08-20</td>
+                </tr>
+                <tr>
+                    <td><a href="story5.html">Community Garden Project</a></td>
+                    <td>Community, Food, Environment</td>
+                    <td>2023-10-10</td>
+                </tr>
+                <!-- Add more story rows here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const tableBody = document.getElementById('story-table').querySelector('tbody');
+        const searchInput = document.getElementById('search-input');
+        const tagFilter = document.getElementById('tag-filter');
+        const headers = document.querySelectorAll('#story-table th');
+
+        let currentSortColumn = null;
+        let currentSortDirection = 'asc'; // 'asc' or 'desc'
+
+        // Function to populate tag filter dropdown
+        function populateTagFilter() {
+            const tags = new Set();
+            tableBody.querySelectorAll('tr').forEach(row => {
+                const tagsCell = row.querySelector('td:nth-child(2)'); // Tags are in the second column
+                if (tagsCell) {
+                    tagsCell.textContent.trim().split(',').forEach(tag => {
+                        if (tag.trim()) {
+                            tags.add(tag.trim());
+                        }
+                    });
+                }
+            });
+
+            Array.from(tags).sort().forEach(tag => {
+                const option = document.createElement('option');
+                option.value = tag;
+                option.textContent = tag;
+                tagFilter.appendChild(option);
+            });
+        }
+
+        // Function to render the table rows based on filters and sort
+        function renderTable(rows) {
+            tableBody.innerHTML = ''; // Clear existing rows
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedTag = tagFilter.value.toLowerCase();
+
+            rows.forEach(row => {
+                const title = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+                const tagsCell = row.querySelector('td:nth-child(2)'); // Updated column index
+                const date = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+
+                const tagsText = tagsCell.textContent.toLowerCase();
+
+                const matchesSearch = title.includes(searchTerm) || tagsText.includes(searchTerm) || date.includes(searchTerm);
+                const matchesTag = selectedTag === '' || tagsText.includes(selectedTag);
+
+                if (matchesSearch && matchesTag) {
+                    tableBody.appendChild(row);
+                }
+            });
+        }
+
+        // Function to sort the table
+        function sortTable(columnKey) {
+            const rows = Array.from(tableBody.querySelectorAll('tr'));
+            const isAsc = currentSortColumn === columnKey && currentSortDirection === 'asc';
+            currentSortDirection = isAsc ? 'desc' : 'asc';
+            currentSortColumn = columnKey;
+
+            // Update sort arrows
+            headers.forEach(header => {
+                header.querySelector('.sort-arrow').classList.remove('asc', 'desc');
+            });
+            const currentHeader = document.querySelector(`th[data-sort="${columnKey}"]`);
+            if (currentHeader) {
+                currentHeader.querySelector('.sort-arrow').classList.add(currentSortDirection);
+            }
+
+            let columnIndex = 0;
+            switch (columnKey) {
+                case 'title': columnIndex = 0; break;
+                case 'tags': columnIndex = 1; break; // Updated column index
+                case 'date': columnIndex = 2; break; // Updated column index
+            }
+
+            rows.sort((a, b) => {
+                let cellA = a.querySelector(`td:nth-child(${columnIndex + 1})`).textContent.toLowerCase();
+                let cellB = b.querySelector(`td:nth-child(${columnIndex + 1})`).textContent.toLowerCase();
+
+                if (columnKey === 'date') {
+                    // Parse dates for proper sorting
+                    const dateA = new Date(cellA);
+                    const dateB = new Date(cellB);
+                    if (dateA < dateB) return isAsc ? -1 : 1;
+                    if (dateA > dateB) return isAsc ? 1 : -1;
+                } else {
+                    if (cellA < cellB) return isAsc ? -1 : 1;
+                    if (cellA > cellB) return isAsc ? 1 : -1;
+                }
+                return 0;
+            });
+
+            renderTable(rows); // Re-render after sorting
+        }
+
+        // Event Listeners
+        searchInput.addEventListener('input', () => {
+            renderTable(Array.from(tableBody.querySelectorAll('tr')));
+            formatTagsAsChips(); // Reformat tags after rendering
+        });
+
+        tagFilter.addEventListener('change', () => {
+            renderTable(Array.from(tableBody.querySelectorAll('tr')));
+            formatTagsAsChips(); // Reformat tags after rendering
+        });
+
+        headers.forEach(header => {
+            header.addEventListener('click', () => {
+                const columnKey = header.getAttribute('data-sort');
+                if (columnKey) {
+                    sortTable(columnKey);
+                    formatTagsAsChips(); // Reformat tags after sorting
+                }
+            });
+        });
+
+        // Initial setup: Populate tags and render initial table
+        document.addEventListener('DOMContentLoaded', () => {
+            populateTagFilter();
+            renderTable(Array.from(tableBody.querySelectorAll('tr'))); // Render initial rows
+            formatTagsAsChips(); // Initial formatting of tags
+        });
+
+    </script>
+
+</body>
+</html>
