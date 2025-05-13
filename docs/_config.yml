@@ -1,0 +1,57 @@
+# Site settings
+# These are used to personalize your new site. If you remove these, Jekyll will use
+# the default values from the theme.
+title: Ted's Personal Page # The title of your website (appears in browser tab, etc.)
+description: Ted Briggs works in Sustainability Strategy for Google. This is his personal webpage, which includes notes about cool things going on in the world of Sustainability. # this means to ignore newlines until "baseurl:"
+  A brief description of your site. This will be used for SEO purposes and
+  in your site's metadata.
+baseurl: "briggs108/Sustainability" # The subpath of your site, e.g. /blog. If your site is at the root of a domain (e.g. yourusername.github.io), leave this blank "". If it's in a subfolder (e.g. yourusername.github.io/my-project), set it to "/my-project".
+url: "" # The base hostname and protocol for your site, e.g. http://example.com
+# If you're using GitHub Pages, and your site is at a custom domain,
+# e.g., "www.yourdomain.com", then this should be "http://www.yourdomain.com"
+# If your site is at a GitHub Pages URL like "yourusername.github.io/your-repo",
+# leave this blank or set it to "https://yourusername.github.io"
+
+repository: briggs108/Sustainability # Optional: If you want Jekyll to automatically grab repo info for things like links to your repo.
+
+# Theme settings
+# If you are using a specific Jekyll theme (e.g., minima, primer, just-the-docs)
+# you would specify it here.
+# theme: jekyll-theme-primer # Uncomment and replace with your theme name if you are using one.
+
+# Build settings
+# Markdown processor to use. Common options are kramdown, commonmark.
+markdown: kramdown
+
+# Plugins to use with Jekyll. These are typically gems that provide extra functionality.
+# You will need to add these to your Gemfile if you haven't already.
+plugins:
+  - jekyll-feed # Generates an Atom feed for your blog posts.
+  - jekyll-seo-tag # Adds SEO-friendly metadata to your pages.
+  - jekyll-sitemap # Generates a sitemap.xml file for search engines.
+  # - jekyll-paginate # Uncomment if you want to enable pagination for blog posts.
+  # - jekyll-github-metadata # Useful for GitHub Pages if you want to access repository data.
+
+# Exclude from processing.
+# The following items will not be processed, by default.
+# Any item listed under the `exclude:` key here will be automatically added to
+# the internal "default list".
+#
+# Excluded items can be re-enabled by adding them to the `include:` list.
+exclude:
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+
+# Optional: Default front matter for all pages and posts.
+# This can be useful for setting default layouts, categories, etc.
+defaults:
+  - scope:
+      path: "" # an empty string here means all files in
