@@ -50,8 +50,15 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
 
+# Files and folders to explicitly include in the build output
+# This is crucial for ensuring your 'data' folder is published
+include:
+  - data/ # Ensure Jekyll includes the 'data' folder and its contents
+
 # Optional: Default front matter for all pages and posts.
 # This can be useful for setting default layouts, categories, etc.
 defaults:
   - scope:
-      path: "" # an empty string here means all files in
+      path: "" # an empty string here means all files in the project
+    values:
+      layout: "default" # Sets 'default' as the default layout for all pages unless specified otherwise
