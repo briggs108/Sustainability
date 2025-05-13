@@ -296,8 +296,7 @@ permalink: /Feed/ # Optional: makes the URL /feed/ instead of /feed.html
                 </tr>
             </thead>
             <tbody>
-                <!-- Story rows will be inserted here by JavaScript -->
-            </tbody>
+                </tbody>
         </table>
 
         <div id="load-more-container">
@@ -305,14 +304,15 @@ permalink: /Feed/ # Optional: makes the URL /feed/ instead of /feed.html
         </div>
     </div>
 
-    <!-- The Image Modal -->
     <div id="imageModal" class="image-modal">
         <img class="image-modal-content" id="modal-image">
     </div>
 
     <script>
-        // REPLACE THIS WITH YOUR PUBLISHED GOOGLE SHEET URL
-        const googleSheetUrl = 'https://script.google.com/macros/s/AKfycbzXLOkRKJqCvVrzeNBuNQNmihCXckU9bT0HAjiczrub2m2PzqjWxzmfvo9-C1ozSxKF/exec'; // Paste your actual Apps Script URL here
+        // Path to your local JSON file
+        // If you put stories.json directly in docs/, use './stories.json'
+        // If you put it in docs/data/stories.json, use './data/stories.json'
+        const storiesJsonUrl = './data/stories.json';
 
         const tableBody = document.getElementById('storyTable').querySelector('tbody');
         const filterButtons = document.querySelectorAll('.filter-btn');
@@ -324,35 +324,23 @@ permalink: /Feed/ # Optional: makes the URL /feed/ instead of /feed.html
         const modalImage = document.getElementById('modal-image');
 
         const storiesPerPage = 10; // How many stories to show initially and per load
-        let allStories = []; // To store all stories from the sheet
+        let allStories = []; // To store all stories from the JSON
         let currentDisplayedStories = 0;
         let filteredStories = [];
 
-        // Function to fetch data from Google Sheet
+        // Function to fetch data from the local JSON file
         async function fetchStories() {
             try {
-                const response = await fetch(googleSheetUrl);
+                const response = await fetch(storiesJsonUrl);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                const csvText = await response.text();
-                const lines = csvText.split('\n');
-                const headers = lines[0].split(',');
+                const jsonData = await response.json(); // Parse JSON directly
 
-                allStories = lines.slice(1).map(line => {
-                    const values = line.split(',');
-                    const story = {};
-                    headers.forEach((header, index) => {
-                        header = header.trim();
-                        let value = (values[index] || '').trim();
-                        if (header === 'tags') {
-                            story[header] = value.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
-                        } else if (header === 'published') {
-                            story[header] = value.toLowerCase() === 'TRUE';
-                        } else {
-                            story[header] = value;
-                        }
-                    });
+                allStories = jsonData.map(story => {
+                    // Ensure 'tags' is an array and 'published' is a boolean, if not already
+                    story.tags = Array.isArray(story.tags) ? story.tags : (story.tags ? story.tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '') : []);
+                    story.published = typeof story.published === 'boolean' ? story.published : (story.published ? String(story.published).toLowerCase() === 'true' : false);
                     return story;
                 });
 
@@ -370,12 +358,12 @@ permalink: /Feed/ # Optional: makes the URL /feed/ instead of /feed.html
 
             } catch (error) {
                 console.error("Error fetching or processing stories:", error);
-                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Error loading stories. Please try again later.</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Error loading stories. Please try again later. Ensure your JSON file is correctly formatted.</td></tr>';
                 loadMoreBtn.style.display = 'none'; // Hide load more on error
             }
         }
 
-        // Function to render stories in the table
+        // Function to render stories in the table (rest of this function is unchanged)
         function renderStories(storiesToShow, startIndex = 0) {
             const endIndex = Math.min(startIndex + storiesPerPage, storiesToShow.length);
             const storiesToRender = storiesToShow.slice(startIndex, endIndex);
@@ -388,7 +376,6 @@ permalink: /Feed/ # Optional: makes the URL /feed/ instead of /feed.html
                  // No more stories to load
                  return;
             }
-
 
             storiesToRender.forEach(story => {
                 const row = document.createElement('tr');
