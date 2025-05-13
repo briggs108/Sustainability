@@ -2,11 +2,11 @@
 # These are used to personalize your new site. If you remove these, Jekyll will use
 # the default values from the theme.
 title: Ted's Personal Page # The title of your website (appears in browser tab, etc.)
-description: Ted Briggs works in Sustainability Strategy for Google. This is his personal webpage, which includes notes about cool things going on in the world of Sustainability. # this means to ignore newlines until "baseurl:"
-  A brief description of your site. This will be used for SEO purposes and
-  in your site's metadata.
-baseurl: "briggs108/Sustainability" # The subpath of your site, e.g. /blog. If your site is at the root of a domain (e.g. yourusername.github.io), leave this blank "". If it's in a subfolder (e.g. yourusername.github.io/my-project), set it to "/my-project".
-url: "" # The base hostname and protocol for your site, e.g. http://example.com
+description: >- # This indicates the following indented lines are part of the description
+  Ted Briggs works in Sustainability Strategy for Google. This is his personal webpage,
+  which includes notes about cool things going on in the world of Sustainability.
+baseurl: "/Sustainability" # Corrected baseurl format as well (see explanation below)
+url: "https://briggs108.github.io" # Added correct URL format for GitHub Pages User/Org Page
 # If you're using GitHub Pages, and your site is at a custom domain,
 # e.g., "www.yourdomain.com", then this should be "http://www.yourdomain.com"
 # If your site is at a GitHub Pages URL like "yourusername.github.io/your-repo",
