@@ -1,28 +1,28 @@
 [
   {
-    "thumbnailUrl": "https://example.com/image1.jpg",
-    "link": "https://example.com/story1",
-    "headline": "New Innovation in Sustainability",
-    "description": "This is a detailed description of the first story about an amazing new sustainable technology.",
-    "tags": ["Innovation", "Energy"],
+    "thumbnailUrl": "https://www.philips.cz/c-dam/assets/ph/ceer/3d/intro_comb.png",
+    "link": "https://www.philips.cz/c-e/fixables",
+    "headline": "Philips introduces 3D Printed Parts for Repair",
+    "description": "Fixables is a collection of 3D printable spare parts for Philips products designed to help you replace small but essential external parts of your device.",
+    "tags": ["Longevity"],
     "date": "2025-05-12",
     "published": true
   },
   {
-    "thumbnailUrl": "https://example.com/image2.png",
-    "link": "https://example.com/story2",
-    "headline": "Breakthrough in Longevity Research",
-    "description": "A fascinating article on recent discoveries extending human lifespan through sustainable practices.",
-    "tags": ["Longevity", "Health"],
+    "thumbnailUrl": "https://scx1.b-cdn.net/csz/news/800a/2025/bio-concrete-from-urin-1.jpg",
+    "link": "https://techxplore.com/news/2025-05-bio-concrete-urine-sustainable-material.html",
+    "headline": "Bio-concrete from urine",
+    "description": "Researchers at the University of Stuttgart have used microbial processes to produce environmentally friendly bio-concrete from urine as part of a "wastewater-bio-concrete-fertilizer" value chain. With the project extension granted by the Baden-Württemberg Ministry of Science, Research, and the Arts, the focus now shifts to product optimization and practical testing.",
+    "tags": ["Materials"],
     "date": "2025-04-28",
     "published": true
   },
   {
-    "thumbnailUrl": "https://example.com/image3.jpeg",
-    "link": "https://example.com/story3",
-    "headline": "Sustainable Startups Taking Off",
-    "description": "Exploring new companies making a significant impact in the green economy with innovative solutions.",
-    "tags": ["Startups"],
+    "thumbnailUrl": "https://assets.weforum.org/article/image/large_Np_cAlQl6IPHUlR1_X6VsUcKv4YFh6NTMGg8k92rV2I.jpg",
+    "link": "https://www.weforum.org/stories/2024/10/solar-panel-innovations/",
+    "headline": "The breakthroughs making solar panels more efficient",
+    "description": "Experts are working to improve the power conversion rate of solar technology. Innovations such as panels using perovskites are showing promising results. A World Economic Forum report also suggests quantum computing could help design more efficient panels.",
+    "tags": ["Innovation"],
     "date": "2025-04-15",
     "published": false
   }
